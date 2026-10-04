@@ -287,9 +287,8 @@ impl<T: 'static> EventLoop<T> {
                     warn!("TODO: forward onStop notification to application");
                 },
                 MainEvent::Destroy => {
-                    // XXX: maybe exit mainloop to drop things before being
-                    // killed by the OS?
-                    warn!("TODO: forward onDestroy notification to application");
+                    self.running = false;
+                    self.window_target.exit();
                 },
                 MainEvent::InsetsChanged { .. } => {
                     // XXX: how to forward this state to applications?
@@ -627,6 +626,12 @@ impl<T: 'static> EventLoop<T> {
 
     fn exiting(&self) -> bool {
         self.window_target.p.exiting()
+    }
+}
+
+impl<T> Drop for EventLoop<T> {
+    fn drop(&mut self) {
+        crate::event_loop::EventLoopBuilder::<()>::allow_event_loop_recreation();
     }
 }
 

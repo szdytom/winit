@@ -39,3 +39,7 @@ The migration guide could reference other migration examples in the current
 changelog entry.
 
 ## Unreleased
+
+### Fixed
+
+- On Android, exit the event loop when its Activity is destroyed and allow recreation after the old loop is dropped.
