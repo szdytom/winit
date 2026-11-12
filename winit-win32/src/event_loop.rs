@@ -338,11 +338,13 @@ impl EventLoop {
         // `MsgWaitForMultipleObjectsEx`.
         //
         self.runner.prepare_wait();
-        wait_for_messages_impl(
-            &mut self.high_resolution_timer,
-            self.runner.control_flow(),
-            timeout,
-        );
+        if self.exit_code().is_none() {
+            wait_for_messages_impl(
+                &mut self.high_resolution_timer,
+                self.runner.control_flow(),
+                timeout,
+            );
+        }
         // Before we potentially exit, make sure to consistently emit an event for the wake up
         self.runner.wakeup();
     }
